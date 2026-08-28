@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "MONA Pay Quick View",
+  "version": "0.1.0",
+  "description": "Xem giao dịch gần nhất và tạo VietQR nhanh từ MONA Pay.",
+  "permissions": ["storage", "alarms"],
+  "host_permissions": ["https://api.monapay.vn/*"],
+  "background": {"service_worker": "background.js"},
+  "action": {"default_title": "MONA Pay", "default_popup": "popup.html"},
+  "options_page": "options.html"
+}

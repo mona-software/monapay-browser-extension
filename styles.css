@@ -1,0 +1,32 @@
+:root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #15233a; background: #f6f8fb; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+button, input, select, textarea { font: inherit; }
+button { border: 0; border-radius: 8px; background: #1d4ed8; color: white; padding: 9px 13px; cursor: pointer; }
+button:disabled { opacity: .6; cursor: wait; }
+button.secondary { background: #e6ebf4; color: #15233a; }
+button.link-button { padding: 2px; background: transparent; color: #1d4ed8; }
+h1, h2, p { margin-top: 0; }
+h1 { font-size: 20px; margin-bottom: 0; }
+h2 { font-size: 15px; }
+label { display: grid; gap: 5px; font-size: 13px; }
+input, select, textarea { width: 100%; border: 1px solid #c9d2df; border-radius: 7px; background: white; color: #15233a; padding: 8px; }
+textarea { resize: vertical; overflow-wrap: anywhere; }
+.popup-page { width: 390px; max-height: 600px; overflow-y: auto; }
+.popup-page > header { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: white; border-bottom: 1px solid #e5e9f0; }
+.popup-page main { padding: 12px; }
+section, fieldset { margin: 0 0 12px; padding: 14px; border: 1px solid #e0e6ee; border-radius: 10px; background: white; }
+.section-title { display: flex; justify-content: space-between; align-items: baseline; }
+.transactions { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.transactions li { padding-bottom: 8px; border-bottom: 1px solid #eef1f5; font-size: 12px; }
+.transactions li div { display: flex; justify-content: space-between; gap: 12px; }
+.transactions li span { display: block; margin-top: 3px; color: #526174; overflow-wrap: anywhere; }
+#qr-form, fieldset { display: grid; gap: 10px; }
+#qr-status, #transactions-status { color: #526174; font-size: 12px; }
+#qr-canvas { display: block; width: 280px; height: 280px; max-width: 100%; margin: 8px auto; image-rendering: pixelated; }
+.options-page main { max-width: 760px; margin: 32px auto; padding: 0 20px; }
+.options-page h1 { margin-bottom: 18px; }
+.warning { margin-bottom: 16px; border-left: 4px solid #b45309; border-radius: 6px; background: #fff7ed; padding: 12px; line-height: 1.5; }
+fieldset { margin-bottom: 16px; }
+legend { font-weight: 700; padding: 0 6px; }
+.actions { display: flex; align-items: center; gap: 12px; }

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Cài đặt MONA Pay</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="options-page">
+  <main>
+    <h1>MONA Pay Quick View</h1>
+    <div class="warning"><strong>Cảnh báo bảo mật:</strong> Chrome lưu các giá trị dưới đây trong <code>chrome.storage.local</code>, không phải secret vault. Chỉ dùng trên profile/máy tin cậy, khóa màn hình, không bật sync dữ liệu extension và thu hồi Client Secret ngay khi nghi lộ.</div>
+    <form id="settings-form">
+      <fieldset><legend>Tài khoản API</legend>
+        <label>Tên đăng nhập<input name="username" autocomplete="username" required></label>
+        <label>Mật khẩu<input name="password" type="password" autocomplete="current-password" required></label>
+        <label>Client Secret<input name="clientSecret" type="password" autocomplete="off" required></label>
+        <label>Số tài khoản ảo để xem giao dịch<input name="virtualAccountNumber" required></label>
+      </fieldset>
+      <fieldset><legend>Tạo VietQR</legend>
+        <label>ownerNumber<input name="ownerNumber" required></label>
+        <label>ownerType<select name="ownerType"><option value="ORG">ORG</option><option value="PER">PER</option></select></label>
+        <label>merchantId<input name="merchantId" required></label>
+        <label>terminalId<input name="terminalId" required></label>
+        <label>virtualAccountPrefix<input name="virtualAccountPrefix" maxlength="10" required></label>
+        <label>beneficiaryName<input name="beneficiaryName" maxlength="100" required></label>
+      </fieldset>
+      <div class="actions"><button type="submit">Lưu cài đặt</button><span id="status" role="status"></span></div>
+    </form>
+    <p>API cố định: <code>https://api.monapay.vn</code>. Mọi POST gửi Bearer và <code>X-Client-Secret</code>.</p>
+  </main>
+  <script src="options.js"></script>
+</body>
+</html>

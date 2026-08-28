@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>MONA Pay</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="popup-page">
+  <header><h1>MONA Pay</h1><button id="open-options" class="secondary" type="button">Cài đặt</button></header>
+  <main>
+    <section>
+      <div class="section-title"><h2>10 giao dịch gần nhất</h2><button id="refresh" class="link-button" type="button">Làm mới</button></div>
+      <p id="transactions-status" role="status">Đang tải…</p>
+      <ul id="transactions" class="transactions"></ul>
+    </section>
+    <section>
+      <h2>Tạo VietQR nhanh</h2>
+      <form id="qr-form">
+        <label>Số tiền VND<input name="amount" type="number" min="0" max="1000000000" step="1" required></label>
+        <label>Nội dung<input name="description" maxlength="255" placeholder="Ví dụ: Thanh toan hoa don 123"></label>
+        <button type="submit">Tạo QR</button>
+      </form>
+      <p id="qr-status" role="status"></p>
+      <div id="qr-result" hidden>
+        <canvas id="qr-canvas" width="280" height="280" aria-label="VietQR"></canvas>
+        <p id="qr-meta"></p>
+        <textarea id="qr-payload" readonly rows="3" aria-label="Chuỗi VietQR"></textarea>
+        <button id="copy-qr" class="secondary" type="button">Copy chuỗi VietQR</button>
+      </div>
+    </section>
+  </main>
+  <script src="qr.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
