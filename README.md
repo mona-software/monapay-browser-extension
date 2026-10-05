@@ -42,3 +42,5 @@ node -e "JSON.parse(require('node:fs').readFileSync('manifest.json')); console.l
 Chrome Web Store policies và form có thể thay đổi; `TODO: kiểm với tài liệu Chrome Web Store tại thời điểm Mon nộp`.
 
 MONA Pay miễn phí hoàn toàn · https://monapay.vn/docs · 1900 636 648 · info@themona.global.
+
+**MONA Pay thuộc bộ MONA Cloud của The MONA Group.**
