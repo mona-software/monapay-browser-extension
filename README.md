@@ -1,46 +1,61 @@
-# MONA Pay Quick View — Chrome/Edge MV3
+# MONA Pay Quick View
 
-Extension Manifest V3 zero-dependency:
+A Manifest V3 browser extension for Chrome and Edge that shows the latest MONA Pay transactions of a virtual account and creates VietQR codes from the toolbar. It has no third-party dependencies.
 
-- Popup xem 10 giao dịch gần nhất của một VA.
-- Tạo VietQR nhanh từ số tiền/nội dung, dựng canvas QR hoàn toàn cục bộ từ payload EMVCo.
-- Badge đếm giao dịch `credit`/`SUCCESS` trong 24 giờ, service worker cập nhật mỗi 5 phút.
-- Options lưu credentials và sáu thông số QR ACB.
+## Features
 
-## Load unpacked
+- Popup listing the 10 most recent transactions of one virtual account (VA).
+- Quick VietQR creation from an amount and a transfer description; the QR code is drawn locally on a canvas from the EMVCo payload, and the payload string can be copied.
+- Toolbar badge counting successful incoming (`credit` / `SUCCESS`) transactions in the last 24 hours, refreshed by the service worker every 5 minutes.
+- Options page for credentials, the VA to watch and the six ACB QR settings.
 
-1. Mở `chrome://extensions` (Chrome) hoặc `edge://extensions` (Edge), bật Developer mode.
-2. Chọn **Load unpacked** và trỏ tới thư mục `devtools/browser-extension/`.
-3. Mở Options, nhập tài khoản MONA Pay, Client Secret, VA và thông số QR từ dashboard.
-4. Ghim extension, mở popup và bấm Làm mới. Chỉ thử Generate QR với tài khoản/VA được phép; gate trong repo không gọi production.
+## Install
 
-API cố định là `https://api.monapay.vn`. Login dùng `POST /api/v1/client/login`; mọi lệnh ghi gửi Bearer + `X-Client-Secret`; giao dịch dùng `GET /api/v1/acb/virtual-account/transactions?virtual_account_number=...&page=1&limit=10`.
+The extension is loaded unpacked from source.
 
-## CORS và bảo mật
+1. Clone `https://github.com/mona-software/monapay-browser-extension`.
+2. Open `chrome://extensions` (Chrome) or `edge://extensions` (Edge) and turn on Developer mode.
+3. Click **Load unpacked** and select the repository folder (the one containing `manifest.json`).
 
-`host_permissions` không tự vượt chính sách CORS của server trong mọi bối cảnh/phân phối. MONA Pay phải bật CORS cho origin `chrome-extension://<extension-id>`/`extension://...` phù hợp, hoặc Mon phải đặt một proxy HTTPS cùng quyền kiểm soát ở giữa. Không dùng proxy công cộng và không tắt CORS bằng extension khác.
+## Quick start
 
-Theo đề bài, username, password, Client Secret và thông số ACB nằm trong `chrome.storage.local`. Đây **không phải secret vault**: người hoặc malware có quyền vào Chrome profile có thể đọc chúng. Chỉ dùng trên máy/profile tin cậy, không bật sync extension data, khóa thiết bị, giới hạn quyền tài khoản và thu hồi key khi nghi lộ. Bearer token chỉ cache trong `chrome.storage.session` và tự làm mới trước khi hết hạn.
+1. Open the extension's Options page and enter your MONA Pay username, password, Client Secret, the virtual account number to watch and the QR settings from the dashboard.
+2. Pin the extension, open the popup and click **Làm mới** (Refresh) to load transactions.
+3. To create a QR code, enter an amount and an optional description and click **Tạo QR** (Create QR).
 
-## Gate
+## Configuration
+
+| Option | Purpose |
+| --- | --- |
+| `username`, `password` | Used to log in and obtain a Bearer token |
+| `clientSecret` | Sent as `X-Client-Secret` on write requests (creating a QR) |
+| `virtualAccountNumber` | The VA whose transactions are listed and counted |
+| `ownerNumber`, `ownerType` (`ORG` or `PER`), `merchantId`, `terminalId`, `virtualAccountPrefix`, `beneficiaryName` | ACB settings for QR creation |
+
+The API origin is fixed to `https://api.monapay.vn`. The extension calls:
+
+- `POST /api/v1/client/login` to log in;
+- `GET /api/v1/acb/virtual-account/transactions?virtual_account_number=...&page=1&limit=10` for transactions;
+- `POST /api/v1/acb/qr-payment/generate` to create a QR code, with an order ID of the form `EXT<timestamp>`.
+
+Permissions: `storage`, `alarms` and host access to `https://api.monapay.vn/*`.
+
+## CORS and security
+
+`host_permissions` does not bypass the server's CORS policy in every context. The MONA Pay API must allow the extension's origin (`chrome-extension://<extension-id>`), or requests must go through an HTTPS proxy you control. Do not use a public proxy or a CORS-disabling extension.
+
+Username, password, Client Secret and ACB settings are stored in `chrome.storage.local`. This is **not** a secret vault: anyone or any malware with access to the browser profile can read them. Use the extension only on a trusted machine and profile, do not sync extension data, lock the device, limit the account's permissions and revoke the key if you suspect it leaked. The Bearer token is cached only in `chrome.storage.session` and refreshed before it expires.
+
+## Development (tests)
 
 ```bash
-find . -name '*.js' -print0 | xargs -0 -n1 node --check
+find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n1 node --check
 node --test
-node -e "JSON.parse(require('node:fs').readFileSync('manifest.json')); console.log('manifest PASS')"
+node -e "JSON.parse(require('node:fs').readFileSync('manifest.json')); console.log('manifest OK')"
 ```
 
-## Publish Chrome Web Store (Mon thực hiện)
+The extension does not ship icons yet; see `icons/README.md`.
 
-1. Thay placeholder bằng icon thương hiệu đã duyệt PNG 16/32/48/128, khai báo `icons` và `action.default_icon` trong manifest. Không tự vẽ hoặc dùng logo chưa được duyệt.
-2. Tạo extension ID ổn định, gửi origin đó cho đội API để cấu hình CORS, rồi test lại bản đóng gói trên Chrome và Edge.
-3. Rà privacy disclosure: dữ liệu xác thực/tài chính chỉ dùng để gọi MONA Pay, không có analytics/CDN. Chuẩn bị support URL và privacy policy công khai.
-4. Tăng version, tạo ZIP có `manifest.json` ở root, không kèm STATUS/test/handoff, rồi Mon upload bằng tài khoản Chrome Web Store Developer.
-5. Khai báo single purpose, permissions `storage`/`alarms` và host `api.monapay.vn`; chụp màn hình popup/options. Không nộp credential thật.
-6. Sau khi Google duyệt, cài listing build vào profile test và smoke test login, CORS, 10 giao dịch, badge 24h, tạo/copy/quét QR.
+Documentation: https://monapay.vn/docs
 
-Chrome Web Store policies và form có thể thay đổi; `TODO: kiểm với tài liệu Chrome Web Store tại thời điểm Mon nộp`.
-
-MONA Pay miễn phí hoàn toàn · https://monapay.vn/docs · 1900 636 648 · info@themona.global.
-
-**MONA Pay thuộc bộ MONA Cloud của The MONA Group.**
+**MONA Pay is part of MONA Cloud by The MONA Group.**
